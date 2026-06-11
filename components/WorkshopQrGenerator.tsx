@@ -3,6 +3,10 @@
 import Image from "next/image";
 import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { parseWorkshopLinks, type WorkshopLink } from "../lib/csvLinks";
+import {
+  QR_DOT_STYLE_OPTIONS,
+  type QrDotStyle
+} from "../lib/qrDotStyle";
 import { QrCanvas } from "./QrCanvas";
 
 const CARDS_PER_PAGE = 6;
@@ -11,6 +15,7 @@ export function WorkshopQrGenerator() {
   const [links, setLinks] = useState<WorkshopLink[]>([]);
   const [fileName, setFileName] = useState<string>("No CSV loaded");
   const [error, setError] = useState<string>("");
+  const [dotStyle, setDotStyle] = useState<QrDotStyle>("square");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pages = useMemo(() => chunkLinks(links, CARDS_PER_PAGE), [links]);
@@ -93,6 +98,23 @@ export function WorkshopQrGenerator() {
           </button>
         </div>
 
+        <div className="style-control">
+          <span>Dot style</span>
+          <div className="segmented-control" role="group" aria-label="QR dot style">
+            {QR_DOT_STYLE_OPTIONS.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={dotStyle === option.id}
+                className={dotStyle === option.id ? "is-active" : ""}
+                onClick={() => setDotStyle(option.id)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="status-grid">
           <div>
             <span>Source</span>
@@ -113,7 +135,7 @@ export function WorkshopQrGenerator() {
 
       <section className="preview-panel" aria-live="polite">
         {links.length ? (
-          <PrintPreview pages={pages} />
+          <PrintPreview dotStyle={dotStyle} pages={pages} />
         ) : (
           <div className="empty-state">
             <Image src="/codex.webp" alt="" width={96} height={96} />
@@ -126,7 +148,13 @@ export function WorkshopQrGenerator() {
   );
 }
 
-function PrintPreview({ pages }: { pages: WorkshopLink[][] }) {
+function PrintPreview({
+  dotStyle,
+  pages
+}: {
+  dotStyle: QrDotStyle;
+  pages: WorkshopLink[][];
+}) {
   return (
     <div className="print-area">
       {pages.map((pageLinks, pageIndex) => (
@@ -134,6 +162,7 @@ function PrintPreview({ pages }: { pages: WorkshopLink[][] }) {
           {pageLinks.map((link, index) => (
             <QrCard
               key={link.id}
+              dotStyle={dotStyle}
               link={link}
               number={pageIndex * CARDS_PER_PAGE + index + 1}
             />
@@ -144,7 +173,15 @@ function PrintPreview({ pages }: { pages: WorkshopLink[][] }) {
   );
 }
 
-function QrCard({ link, number }: { link: WorkshopLink; number: number }) {
+function QrCard({
+  dotStyle,
+  link,
+  number
+}: {
+  dotStyle: QrDotStyle;
+  link: WorkshopLink;
+  number: number;
+}) {
   return (
     <article className="qr-card">
       <div className="qr-card-header">
@@ -156,7 +193,7 @@ function QrCard({ link, number }: { link: WorkshopLink; number: number }) {
       </div>
 
       <div className="qr-frame">
-        <QrCanvas value={link.url} size={270} />
+        <QrCanvas dotStyle={dotStyle} value={link.url} size={270} />
       </div>
 
       <div className="link-block">

@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import qrcode from "qrcode-generator";
+import { getQrDotRadius, type QrDotStyle } from "../lib/qrDotStyle";
 
 type QrCanvasProps = {
   value: string;
   size?: number;
+  dotStyle: QrDotStyle;
 };
 
 const CODEX_BLUE = "#2442ff";
@@ -16,7 +18,7 @@ const CENTER_BADGE_EXTRA_PX = 4;
 const CENTER_LOGO_FILL = 0.78;
 const LOGO_SOURCE_INSET = 0.12;
 
-export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
+export function QrCanvas({ dotStyle, value, size = 360 }: QrCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -55,19 +57,27 @@ export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
     gradient.addColorStop(1, CODEX_BLUE);
 
     context.fillStyle = gradient;
-    const moduleRadius = Math.max(1.2, moduleSize * 0.26);
+    const moduleRadius = getQrDotRadius(dotStyle, moduleSize);
     for (let row = 0; row < moduleCount; row += 1) {
       for (let col = 0; col < moduleCount; col += 1) {
         if (qr.isDark(row, col)) {
-          roundedRect(
-            context,
-            offset + col * moduleSize,
-            offset + row * moduleSize,
-            Math.ceil(moduleSize),
-            Math.ceil(moduleSize),
-            moduleRadius
-          );
-          context.fill();
+          const x = offset + col * moduleSize;
+          const y = offset + row * moduleSize;
+          const moduleDimension = Math.ceil(moduleSize);
+
+          if (moduleRadius === 0) {
+            context.fillRect(x, y, moduleDimension, moduleDimension);
+          } else {
+            context.beginPath();
+            context.arc(
+              x + moduleSize / 2,
+              y + moduleSize / 2,
+              moduleRadius,
+              0,
+              Math.PI * 2
+            );
+            context.fill();
+          }
         }
       }
     }
@@ -112,7 +122,7 @@ export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
     return () => {
       cancelled = true;
     };
-  }, [size, value]);
+  }, [dotStyle, size, value]);
 
   return (
     <canvas

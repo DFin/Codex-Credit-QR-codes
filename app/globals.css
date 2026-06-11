@@ -162,6 +162,48 @@ h1 {
   gap: 10px;
 }
 
+.style-control {
+  display: grid;
+  gap: 8px;
+}
+
+.style-control > span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.segmented-control {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #eef2ff;
+}
+
+.segmented-control button {
+  min-height: 36px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  font-size: 0.88rem;
+}
+
+.segmented-control button:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.segmented-control button.is-active {
+  background: #ffffff;
+  color: var(--codex-blue);
+  box-shadow: 0 8px 20px rgba(20, 31, 79, 0.11);
+}
+
 .status-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
