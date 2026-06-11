@@ -34,4 +34,6 @@ npm run build
 
 ## License
 
-MIT
+MIT.
+
+This is an independent project and not an official OpenAI repository. It is not affiliated with, endorsed by, or sponsored by OpenAI. OpenAI, Codex, and the Codex name, icon, and logo are owned by OpenAI and may be protected by trademark, copyright, and other laws; no rights in those marks or assets are granted by this project's MIT license.
