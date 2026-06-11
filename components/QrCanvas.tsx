@@ -74,18 +74,33 @@ export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
         return;
       }
 
-      const badgeSize = size * 0.34;
-      const logoSize = size * 0.27;
+      const badgeSize = size * 0.265;
+      const logoSize = badgeSize * 0.94;
       const badgeX = (size - badgeSize) / 2;
       const badgeY = (size - badgeSize) / 2;
       const logoX = (size - logoSize) / 2;
       const logoY = (size - logoSize) / 2;
+      const sourceSize = Math.min(logo.naturalWidth, logo.naturalHeight);
+      const sourceInset = sourceSize * 0.14;
+      const croppedSourceSize = sourceSize - sourceInset * 2;
+      const sourceX = (logo.naturalWidth - sourceSize) / 2 + sourceInset;
+      const sourceY = (logo.naturalHeight - sourceSize) / 2 + sourceInset;
 
       context.fillStyle = "#ffffff";
       roundedRect(context, badgeX, badgeY, badgeSize, badgeSize, size * 0.04);
       context.fill();
 
-      context.drawImage(logo, logoX, logoY, logoSize, logoSize);
+      context.drawImage(
+        logo,
+        sourceX,
+        sourceY,
+        croppedSourceSize,
+        croppedSourceSize,
+        logoX,
+        logoY,
+        logoSize,
+        logoSize
+      );
     };
     logo.src = "/codex.webp";
 
