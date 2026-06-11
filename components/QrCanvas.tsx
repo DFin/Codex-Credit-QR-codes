@@ -12,6 +12,7 @@ const CODEX_BLUE = "#2442ff";
 const CODEX_PURPLE = "#9188ff";
 const QUIET_ZONE_MODULES = 4;
 const CENTER_BADGE_SCALE = 0.265;
+const CENTER_BADGE_EXTRA_PX = 4;
 const CENTER_LOGO_FILL = 0.78;
 const LOGO_SOURCE_INSET = 0.12;
 
@@ -77,8 +78,9 @@ export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
         return;
       }
 
-      const badgeSize = size * CENTER_BADGE_SCALE;
-      const logoSize = badgeSize * CENTER_LOGO_FILL;
+      const baseBadgeSize = size * CENTER_BADGE_SCALE;
+      const badgeSize = baseBadgeSize + CENTER_BADGE_EXTRA_PX;
+      const logoSize = baseBadgeSize * CENTER_LOGO_FILL;
       const badgeX = (size - badgeSize) / 2;
       const badgeY = (size - badgeSize) / 2;
       const logoX = (size - logoSize) / 2;
