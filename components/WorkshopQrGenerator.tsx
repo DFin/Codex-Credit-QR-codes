@@ -79,7 +79,7 @@ export function WorkshopQrGenerator() {
             priority
           />
           <div>
-            <h1>Codex Workshop QR Generator</h1>
+            <h1>Codex Credits QR Generator</h1>
             <p>Upload credit URLs and print Codex handout cards.</p>
           </div>
         </div>
