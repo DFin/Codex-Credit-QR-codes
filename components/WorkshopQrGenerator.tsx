@@ -1,12 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { parseWorkshopLinks, type WorkshopLink } from "../lib/csvLinks";
 import {
   QR_DOT_STYLE_OPTIONS,
   type QrDotStyle
 } from "../lib/qrDotStyle";
+import { SAMPLE_CSV_FILE_NAME, SAMPLE_CSV_PATH } from "../lib/sampleCsv";
+import {
+  DEFAULT_EVENT_TITLE,
+  normalizeEventTitle
+} from "../lib/eventTitle";
 import { QrCanvas } from "./QrCanvas";
 
 const CARDS_PER_PAGE = 6;
@@ -16,9 +21,15 @@ export function WorkshopQrGenerator() {
   const [fileName, setFileName] = useState<string>("No CSV loaded");
   const [error, setError] = useState<string>("");
   const [dotStyle, setDotStyle] = useState<QrDotStyle>("square");
+  const [eventTitle, setEventTitle] = useState<string>(DEFAULT_EVENT_TITLE);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pages = useMemo(() => chunkLinks(links, CARDS_PER_PAGE), [links]);
+  const cardEventTitle = normalizeEventTitle(eventTitle);
+
+  useEffect(() => {
+    void loadSampleCsv();
+  }, []);
 
   async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -31,9 +42,9 @@ export function WorkshopQrGenerator() {
   }
 
   async function loadSampleCsv() {
-    const response = await fetch("/sample_codex_credits.csv");
+    const response = await fetch(SAMPLE_CSV_PATH);
     const csvText = await response.text();
-    loadCsv(csvText, "sample_codex_credits.csv");
+    loadCsv(csvText, SAMPLE_CSV_FILE_NAME);
   }
 
   function loadCsv(csvText: string, sourceName: string) {
@@ -115,6 +126,15 @@ export function WorkshopQrGenerator() {
           </div>
         </div>
 
+        <label className="title-control">
+          <span>Event title</span>
+          <input
+            type="text"
+            value={eventTitle}
+            onChange={(event) => setEventTitle(event.target.value)}
+          />
+        </label>
+
         <div className="status-grid">
           <div>
             <span>Source</span>
@@ -135,7 +155,11 @@ export function WorkshopQrGenerator() {
 
       <section className="preview-panel" aria-live="polite">
         {links.length ? (
-          <PrintPreview dotStyle={dotStyle} pages={pages} />
+          <PrintPreview
+            eventTitle={cardEventTitle}
+            dotStyle={dotStyle}
+            pages={pages}
+          />
         ) : (
           <div className="empty-state">
             <Image src="/codex.webp" alt="" width={96} height={96} />
@@ -149,9 +173,11 @@ export function WorkshopQrGenerator() {
 }
 
 function PrintPreview({
+  eventTitle,
   dotStyle,
   pages
 }: {
+  eventTitle: string;
   dotStyle: QrDotStyle;
   pages: WorkshopLink[][];
 }) {
@@ -159,12 +185,12 @@ function PrintPreview({
     <div className="print-area">
       {pages.map((pageLinks, pageIndex) => (
         <div className="print-sheet" key={`page-${pageIndex}`}>
-          {pageLinks.map((link, index) => (
+          {pageLinks.map((link) => (
             <QrCard
               key={link.id}
+              eventTitle={eventTitle}
               dotStyle={dotStyle}
               link={link}
-              number={pageIndex * CARDS_PER_PAGE + index + 1}
             />
           ))}
         </div>
@@ -174,21 +200,21 @@ function PrintPreview({
 }
 
 function QrCard({
+  eventTitle,
   dotStyle,
-  link,
-  number
+  link
 }: {
+  eventTitle: string;
   dotStyle: QrDotStyle;
   link: WorkshopLink;
-  number: number;
 }) {
   return (
     <article className="qr-card">
       <div className="qr-card-header">
-        <Image src="/codex.webp" alt="" width={28} height={28} />
+        <Image src="/codex.webp" alt="" width={20} height={20} />
         <div>
-          <span>Codex Workshop</span>
-          <strong>Credit access #{number}</strong>
+          <strong>OpenAI Codex Community</strong>
+          <span>{eventTitle}</span>
         </div>
       </div>
 

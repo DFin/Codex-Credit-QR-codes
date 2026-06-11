@@ -204,6 +204,36 @@ h1 {
   box-shadow: 0 8px 20px rgba(20, 31, 79, 0.11);
 }
 
+.title-control {
+  display: grid;
+  gap: 8px;
+}
+
+.title-control span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.title-control input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: var(--text);
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.title-control input:focus {
+  border-color: var(--codex-blue);
+  box-shadow: 0 0 0 3px rgba(36, 66, 255, 0.14);
+  outline: none;
+}
+
 .status-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -293,10 +323,21 @@ h1 {
       border-box;
 }
 
+.link-block {
+  min-width: 0;
+}
+
+.link-block span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
 .qr-card-header {
   display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 8px;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 7px;
   align-items: center;
 }
 
@@ -305,19 +346,22 @@ h1 {
   min-width: 0;
 }
 
-.qr-card-header span,
-.link-block span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.72rem;
-  line-height: 1.25;
-}
-
 .qr-card-header strong {
   display: block;
   overflow: hidden;
-  font-size: 0.88rem;
+  color: var(--text);
+  font-size: 0.83rem;
   line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qr-card-header span {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
