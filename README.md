@@ -1,3 +1,5 @@
+![Codex Credit QR Codes app preview](assets/github-readme-preview.png)
+
 # Codex Credit QR Codes
 
 Small Next.js app for Codex ambassadors to generate printable QR-code handout cards from a CSV of credit URLs.
