@@ -11,6 +11,9 @@ type QrCanvasProps = {
 const CODEX_BLUE = "#2442ff";
 const CODEX_PURPLE = "#9188ff";
 const QUIET_ZONE_MODULES = 4;
+const CENTER_BADGE_SCALE = 0.265;
+const CENTER_LOGO_FILL = 0.78;
+const LOGO_SOURCE_INSET = 0.12;
 
 export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -74,20 +77,20 @@ export function QrCanvas({ value, size = 360 }: QrCanvasProps) {
         return;
       }
 
-      const badgeSize = size * 0.265;
-      const logoSize = badgeSize * 0.94;
+      const badgeSize = size * CENTER_BADGE_SCALE;
+      const logoSize = badgeSize * CENTER_LOGO_FILL;
       const badgeX = (size - badgeSize) / 2;
       const badgeY = (size - badgeSize) / 2;
       const logoX = (size - logoSize) / 2;
       const logoY = (size - logoSize) / 2;
       const sourceSize = Math.min(logo.naturalWidth, logo.naturalHeight);
-      const sourceInset = sourceSize * 0.14;
+      const sourceInset = sourceSize * LOGO_SOURCE_INSET;
       const croppedSourceSize = sourceSize - sourceInset * 2;
       const sourceX = (logo.naturalWidth - sourceSize) / 2 + sourceInset;
       const sourceY = (logo.naturalHeight - sourceSize) / 2 + sourceInset;
 
       context.fillStyle = "#ffffff";
-      roundedRect(context, badgeX, badgeY, badgeSize, badgeSize, size * 0.04);
+      roundedRect(context, badgeX, badgeY, badgeSize, badgeSize, size * 0.012);
       context.fill();
 
       context.drawImage(
